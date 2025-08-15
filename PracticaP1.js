@@ -127,3 +127,65 @@ function busquedaBinaria(lista, elemento) {
     return -1; // No encontrado
 }
 // console.log(busquedaBinaria([1, 3, 5, 7, 9], 5)); // 2
+
+
+//Escribe una función que reciba dos números y retorne su suma.
+
+function suma (a,b){
+    return resultado = a + b
+}
+
+console.log(suma(2,1))
+
+//Escribe una función que determine si un número es par o impar.
+
+function paroimpar(a){
+    if(a % 2 == 0){
+        return "par"
+    }else{
+        return "impar"
+    }
+}
+
+console.log(paroimpar(3))
+
+//Escribe una función que reciba una palabra y determine si es un palíndromo (es decir, que se lee igual al derecho que al revés).
+
+function palindromo(palabra){
+    const strReversa = palabra.split('').reverse().join('');
+    let x = strReversa
+    if(palabra == strReversa){
+        return "Palindromo"
+    }else{
+        return "No"
+    }
+}
+
+console.log(palindromo("dinosaurio"))
+
+//Escribe una función que reciba tres números y retorne el mayor de los tres.
+
+function tresnumeros(a,b,c){
+    let x = a
+    if(a <= b) x = b
+    if (b <= c) x = c
+    return x
+}
+
+console.log(tresnumeros(14,22,2))
+
+//Escribe una función que reciba una cadena de texto y cuente cuántas vocales (a, e, i, o, u) contiene.}
+
+function contarbocales(a){
+    cont = 0
+    b = a.length -1
+    while (b >= 0) {
+        if (a[b] == "a" ||a[b] == "e" || a[b] == "i" || a[b] == "o" || a[b] == "u") {
+            cont++; 
+        }
+        b--;  
+    }
+    return cont
+}
+
+console.log(contarbocales("perrau"))
