@@ -1,10 +1,31 @@
 const express = require('express');
-const r = express.Router();
-const { findMax, includes, sum, missingNumbers } = require('../taller-02');
+const router = express.Router();
 
-r.post('/find-max', (req,res)=>{ const { lista } = req.body; res.json({ resultado: findMax(lista) }); });
-r.post('/includes', (req,res)=>{ const { lista, numero } = req.body; res.json({ resultado: includes(lista, numero) }); });
-r.post('/sum', (req,res)=>{ const { lista } = req.body; res.json({ resultado: sum(lista) }); });
-r.post('/missing-numbers', (req,res)=>{ const { lista } = req.body; res.json({ resultado: missingNumbers(lista) }); });
+const {
+  findMax,
+  includes,
+  sum,
+  missingNumbers
+} = require('../taller-02');
 
-module.exports = r;
+router.post('/find-max', (req, res) => {
+  const { lista } = req.body;
+  res.json({ resultado: findMax(lista) });
+});
+
+router.post('/includes', (req, res) => {
+  const { lista, numero } = req.body;
+  res.json({ resultado: includes(lista, numero) });
+});
+
+router.post('/sum', (req, res) => {
+  const { lista } = req.body;
+  res.json({ resultado: sum(lista) });
+});
+
+router.post('/missing-numbers', (req, res) => {
+  const { lista } = req.body;
+  res.json({ resultado: missingNumbers(lista) });
+});
+
+module.exports = router;
