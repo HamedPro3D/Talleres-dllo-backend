@@ -261,3 +261,23 @@ Pasos recomendados:
 4. Verificar el puerto de MongoDB en la pestaña **Ports**.
 5. Iniciar el servidor con `npm start`.
 6. Probar los endpoints mediante `test.http`.
+
+11. Ejecutar MongoDB con Docker (opcional)
+
+Si no dispone de una instalación local de MongoDB, puede ejecutarlo mediante Docker:
+
+docker run -d -p 27017:27017 --name mongo mongo
+
+Una vez iniciado el contenedor, utilice la siguiente cadena en su archivo .env:
+
+MONGO_URI=mongodb://localhost:27017/biblioteca
+
+
+Para detener el contenedor:
+
+docker stop mongo
+
+
+Para volver a iniciarlo:
+
+docker start mongo
