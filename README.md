@@ -231,6 +231,8 @@ Content-Type: application/json
 }
 ```
 
+El ejemplo mas claro esta en el test.html ya creado, es un paso a paso de como utilizarse.
+
 ---
 
 ## 9. Soft deletes
