@@ -262,7 +262,7 @@ Pasos recomendados:
 5. Iniciar el servidor con `npm start`.
 6. Probar los endpoints mediante `test.http`.
 
-11. Ejecutar MongoDB con Docker (opcional)
+## 11. Ejecutar MongoDB con Docker (opcional)
 
 Si no dispone de una instalación local de MongoDB, puede ejecutarlo mediante Docker:
 
