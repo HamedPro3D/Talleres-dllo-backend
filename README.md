@@ -1,41 +1,40 @@
 
 # Sistema de Gestión de Biblioteca – API REST (Node.js + Express + MongoDB)
 
-Este proyecto implementa una API REST para la gestión básica de una biblioteca. Incluye manejo de usuarios, libros y reservas, con autenticación mediante JWT, control de permisos y “soft deletes” para mayor seguridad.
+Este proyecto implementa una API REST para la administración de una biblioteca. Incluye manejo de usuarios, libros y reservas, autenticación mediante JSON Web Tokens (JWT), control de permisos y eliminación lógica (“soft delete”).
 
 El sistema permite:
-
-* Registrar y autenticar usuarios.
-* Administrar libros con CRUD completo.
-* Realizar y gestionar reservas de libros.
-* Controlar permisos para operaciones sensibles.
-* Realizar soft deletes en usuarios y libros.
-* Usar filtros avanzados para la búsqueda de libros.
-* Probar toda la API desde VSCode mediante un archivo `test.http`.
+- Registrar y autenticar usuarios.
+- Administrar libros mediante operaciones CRUD.
+- Realizar y gestionar reservas.
+- Controlar permisos para operaciones restringidas.
+- Ejecutar eliminaciones lógicas en usuarios y libros.
+- Utilizar un sistema de filtros avanzados para búsquedas de libros.
+- Probar todos los endpoints utilizando el archivo `test.http`.
 
 ---
 
 ## 1. Requisitos previos
 
-Antes de instalar el proyecto, asegúrese de tener:
+Para ejecutar el proyecto localmente o en GitHub Codespaces se requiere:
 
-* Node.js 16+
-* npm 8+
-* MongoDB Atlas o MongoDB local
-* Visual Studio Code (opcional, recomendado)
-* Extensión “REST Client” (si desea ejecutar `test.http`)
+- Node.js 16 o superior  
+- npm 8 o superior  
+- MongoDB (local o remoto). En GitHub Codespaces, MongoDB se ejecuta automáticamente dentro del entorno.  
+- Visual Studio Code (opcional, recomendado)  
+- Extensión **REST Client** (necesaria para usar `test.http`)
 
 ---
 
 ## 2. Instalación del proyecto
 
-Clone el repositorio e instale dependencias:
+Clone el repositorio e instale las dependencias:
 
 ```bash
 git clone https://github.com/HamedPro3D/Talleres-dllo-backend.git
-cd biblioteca-api
+cd Talleres-dllo-backend
 npm install
-```
+````
 
 ---
 
@@ -49,11 +48,22 @@ JWT_SECRET=<clave-secreta>
 PORT=3000
 ```
 
-Un ejemplo de `MONGO_URI` usando MongoDB Atlas:
+### Ejemplo para MongoDB Atlas
 
 ```
 MONGO_URI=mongodb+srv://usuario:password@cluster.mongodb.net/biblioteca
 ```
+
+### Uso de MongoDB en GitHub Codespaces
+
+Codespaces ejecuta automáticamente MongoDB dentro de un contenedor.
+Generalmente, la conexión se realiza así:
+
+```
+MONGO_URI=mongodb://localhost:27017/biblioteca
+```
+
+Puede verificar el puerto desde la pestaña **Ports** de Codespaces.
 
 ---
 
@@ -65,7 +75,7 @@ Para iniciar el servidor:
 npm start
 ```
 
-El servidor se iniciará por defecto en:
+Por defecto, la API estará disponible en:
 
 ```
 http://localhost:3000
@@ -102,46 +112,46 @@ package.json
 
 El sistema utiliza:
 
-* **JWT** para autenticar usuarios
-* **roles basados en permisos**
+* Autenticación mediante JWT.
+* Control de permisos basado en una lista asignada por usuario.
 
-Ejemplos de permisos:
+Permisos disponibles:
 
-* `CREATE_BOOKS`
-* `UPDATE_BOOKS`
-* `DISABLE_BOOKS`
-* `UPDATE_USERS`
-* `DISABLE_USERS`
+* CREATE_BOOKS
+* UPDATE_BOOKS
+* DISABLE_BOOKS
+* UPDATE_USERS
+* DISABLE_USERS
 
-Los permisos deben asignarse manualmente en MongoDB o mediante un endpoint de actualización de usuario.
+Los permisos pueden asignarse mediante el endpoint de actualización de usuario o directamente desde MongoDB.
 
 ---
 
-## 7. Endpoints disponibles
+## 7. Endpoints
 
 ### 7.1. Usuarios
 
-| Método | Endpoint              | Descripción            | Requiere Auth | Requiere Permiso                     |
-| ------ | --------------------- | ---------------------- | ------------- | ------------------------------------ |
-| POST   | `/api/users/register` | Registrar usuario      | No            | No                                   |
-| POST   | `/api/users/login`    | Autenticarse           | No            | No                                   |
-| GET    | `/api/users/me`       | Obtener usuario actual | Sí            | No                                   |
-| PATCH  | `/api/users/:id`      | Actualizar usuario     | Sí            | UPDATE_USERS o ser el mismo usuario  |
-| DELETE | `/api/users/:id`      | Soft delete            | Sí            | DISABLE_USERS o ser el mismo usuario |
+| Método | Endpoint              | Descripción            | Autenticación | Permiso requerido                     |
+| ------ | --------------------- | ---------------------- | ------------- | ------------------------------------- |
+| POST   | `/api/users/register` | Registrar usuario      | No            | No                                    |
+| POST   | `/api/users/login`    | Iniciar sesión         | No            | No                                    |
+| GET    | `/api/users/me`       | Obtener usuario actual | Sí            | No                                    |
+| PATCH  | `/api/users/:id`      | Actualizar usuario     | Sí            | UPDATE_USERS o ser el propio usuario  |
+| DELETE | `/api/users/:id`      | Soft delete            | Sí            | DISABLE_USERS o ser el propio usuario |
 
 ---
 
 ### 7.2. Libros
 
-| Método | Endpoint         | Descripción                         | Auth | Permiso       |
-| ------ | ---------------- | ----------------------------------- | ---- | ------------- |
-| POST   | `/api/books`     | Crear libro                         | Sí   | CREATE_BOOKS  |
-| GET    | `/api/books`     | Obtener lista de libros con filtros | No   | No            |
-| GET    | `/api/books/:id` | Obtener un libro                    | No   | No            |
-| PATCH  | `/api/books/:id` | Actualizar libro                    | Sí   | UPDATE_BOOKS  |
-| DELETE | `/api/books/:id` | Soft delete de libro                | Sí   | DISABLE_BOOKS |
+| Método | Endpoint         | Descripción                 | Auth | Permiso       |
+| ------ | ---------------- | --------------------------- | ---- | ------------- |
+| POST   | `/api/books`     | Crear libro                 | Sí   | CREATE_BOOKS  |
+| GET    | `/api/books`     | Listar libros (con filtros) | No   | No            |
+| GET    | `/api/books/:id` | Obtener libro por ID        | No   | No            |
+| PATCH  | `/api/books/:id` | Actualizar libro            | Sí   | UPDATE_BOOKS  |
+| DELETE | `/api/books/:id` | Soft delete                 | Sí   | DISABLE_BOOKS |
 
-**Filtros disponibles:**
+#### Filtros disponibles:
 
 * `genre`
 * `author`
@@ -156,33 +166,33 @@ Los permisos deben asignarse manualmente en MongoDB o mediante un endpoint de ac
 Ejemplo:
 
 ```
-GET /api/books?author=Gabriel&available=true&genre=realismo
+GET /api/books?author=Gabriel&available=true&genre=Realismo
 ```
 
 ---
 
 ### 7.3. Reservas
 
-| Método | Endpoint                        | Descripción                  | Auth |
-| ------ | ------------------------------- | ---------------------------- | ---- |
-| POST   | `/api/reservations`             | Crear reserva                | Sí   |
-| GET    | `/api/reservations/my`          | Obtener reservas del usuario | Sí   |
-| POST   | `/api/reservations/:id/deliver` | Marcar libro como entregado  | Sí   |
-| DELETE | `/api/reservations/:id`         | Eliminar reserva             | Sí   |
+| Método | Endpoint                        | Descripción                   | Auth |
+| ------ | ------------------------------- | ----------------------------- | ---- |
+| POST   | `/api/reservations`             | Crear reserva                 | Sí   |
+| GET    | `/api/reservations/my`          | Obtener reservas propias      | Sí   |
+| POST   | `/api/reservations/:id/deliver` | Marcar reserva como entregada | Sí   |
+| DELETE | `/api/reservations/:id`         | Eliminar reserva              | Sí   |
 
 Reglas:
 
-* Un usuario **no puede reservar el mismo libro dos veces** sin entregarlo.
+* Un usuario no puede reservar el mismo libro más de una vez sin entregarlo.
 * Cuando se reserva un libro, `available = false`.
-* Cuando se entrega, `available = true`.
+* Al entregarlo, `available = true`.
 
 ---
 
-## 8. Archivo `test.http`
+## 8. Uso del archivo `test.http`
 
-Este archivo permite ejecutar todas las rutas desde VSCode usando la extensión **REST Client**.
+El archivo `test.http` permite ejecutar todas las rutas desde VSCode usando la extensión **REST Client**.
 
-Cree un archivo llamado `test.http` con el siguiente contenido de ejemplo:
+Ejemplo de uso:
 
 ```http
 ### Registrar usuario
@@ -190,9 +200,9 @@ POST http://localhost:3000/api/users/register
 Content-Type: application/json
 
 {
-  "name": "admin",
-  "email": "admin@example.com",
-  "password": "123456"
+    "name": "admin",
+    "email": "admin@example.com",
+    "password": "123456"
 }
 
 ### Login
@@ -200,18 +210,12 @@ POST http://localhost:3000/api/users/login
 Content-Type: application/json
 
 {
-  "email": "admin@example.com",
-  "password": "123456"
+    "email": "admin@example.com",
+    "password": "123456"
 }
 
-###
-
-# Copiar aquí el token
+### Guardar token
 @token = <token>
-
-### Obtener usuario actual
-GET http://localhost:3000/api/users/me
-Authorization: Bearer {{token}}
 
 ### Crear libro
 POST http://localhost:3000/api/books
@@ -225,47 +229,35 @@ Content-Type: application/json
   "publisher": "Sudamericana",
   "publicationDate": "1967-05-30"
 }
-
-### Obtener libros con filtros
-GET http://localhost:3000/api/books?author=Gabriel
-
-### Crear reserva
-POST http://localhost:3000/api/reservations
-Authorization: Bearer {{token}}
-Content-Type: application/json
-
-{
-  "bookId": "<ID_DEL_LIBRO>"
-}
-
-### Entregar reserva
-POST http://localhost:3000/api/reservations/<id-reserva>/deliver
-Authorization: Bearer {{token}}
 ```
 
 ---
 
 ## 9. Soft deletes
 
-Tanto usuarios como libros se eliminan de forma lógica:
+Los usuarios y los libros no se eliminan físicamente.
+El campo que marca su estado es:
 
 ```
 disabled: true
 ```
 
-Nunca se elimina un documento definitivamente.
+El sistema excluye automáticamente los elementos inhabilitados de los listados.
 
 ---
 
-## 10. Ejecución en GitHub Codespaces
+## 10. Uso en GitHub Codespaces
 
-Si se usa Codespaces:
+GitHub Codespaces crea automáticamente un contenedor donde se ejecuta:
 
-1. Abrir el espacio.
-2. Instalar dependencias:
-   `npm install`
-3. Crear `.env`
-4. Iniciar servidor:
-   `npm start`
-5. Probar rutas desde `test.http`
-6. Usar la URL pública de Codespaces si se desea consumir desde fuera.
+* El servidor Node.js
+* Una instancia de MongoDB expuesta en un puerto interno (por defecto 27017)
+
+Pasos recomendados:
+
+1. Abrir el Codespace desde GitHub.
+2. Instalar dependencias con `npm install`.
+3. Crear el archivo `.env`.
+4. Verificar el puerto de MongoDB en la pestaña **Ports**.
+5. Iniciar el servidor con `npm start`.
+6. Probar los endpoints mediante `test.http`.
