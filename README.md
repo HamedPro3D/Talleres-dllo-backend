@@ -32,7 +32,7 @@ Antes de instalar el proyecto, asegúrese de tener:
 Clone el repositorio e instale dependencias:
 
 ```bash
-git clone <url-del-repo>
+git clone https://github.com/HamedPro3D/Talleres-dllo-backend.git
 cd biblioteca-api
 npm install
 ```
