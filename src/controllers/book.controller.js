@@ -43,7 +43,7 @@ const getBookById = async (req, res) => {
 // READ (* Libros) con filtros + paginación + incluye ID y datos completos
 const getBooks = async (req, res) => {
   try {
-    const {
+    let {
       genre,
       author,
       publisher,
@@ -63,20 +63,29 @@ const getBooks = async (req, res) => {
       filters.disabled = false;
     }
 
-    if (genre) filters.genre = genre;
-    if (author) filters.author = author;
-    if (publisher) filters.publisher = publisher;
-    if (title) filters.title = { $regex: title, $options: "i" };
-    if (available !== undefined) filters.available = available === "true";
+    // Helper para búsquedas flexibles (contiene, sin importar mayúsculas/minúsculas)
+    const makeRegex = (value) => new RegExp(value, "i");
 
+    if (genre) filters.genre = makeRegex(genre);
+    if (author) filters.author = makeRegex(author);
+    if (publisher) filters.publisher = makeRegex(publisher);
+    if (title) filters.title = makeRegex(title);
+
+    // disponibilidad: acepta "true" / "false"
+    if (typeof available === "string") {
+      if (available.toLowerCase() === "true") filters.available = true;
+      if (available.toLowerCase() === "false") filters.available = false;
+    }
+
+    // Filtro por rango de fechas
     if (fromDate || toDate) {
       filters.publicationDate = {};
       if (fromDate) filters.publicationDate.$gte = new Date(fromDate);
       if (toDate) filters.publicationDate.$lte = new Date(toDate);
     }
 
-    const pageNum = parseInt(page, 10);
-    const limitNum = parseInt(limit, 10);
+    const pageNum = Math.max(parseInt(page, 10) || 1, 1);
+    const limitNum = Math.max(parseInt(limit, 10) || 10, 1);
 
     const total = await Book.countDocuments(filters);
 
@@ -84,14 +93,13 @@ const getBooks = async (req, res) => {
       .skip((pageNum - 1) * limitNum)
       .limit(limitNum)
       .sort({ title: 1 })
-      .select("-__v"); // limpiamos campos innecesarios
+      .select("-__v");
 
-    // Aquí devolvemos los libros completos (incluye _id)
     res.json({
-      books: books,
+      books,
       pagination: {
         page: pageNum,
-        maxPage: Math.ceil(total / limitNum),
+        maxPage: Math.ceil(total / limitNum) || 0,
         limit: limitNum,
         total
       }
@@ -100,6 +108,7 @@ const getBooks = async (req, res) => {
     res.status(500).json({ message: "Error obteniendo libros", error: err.message });
   }
 };
+
 
 // UPDATE (Libro) - requiere permiso UPDATE_BOOKS para info de libro
 const updateBook = async (req, res) => {

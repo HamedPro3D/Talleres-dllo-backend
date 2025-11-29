@@ -10,8 +10,6 @@ Content-Type: application/json
   "password": "123456"
 }
 
-###
-
 ### Login
 POST http://localhost:3000/api/auth/login
 Content-Type: application/json
@@ -20,6 +18,11 @@ Content-Type: application/json
   "email": "andrea@example.com",
   "password": "123456"
 }
+
+### Ver usuario
+GET http://localhost:3000/api/users/me
+Authorization: Bearer {{token}}
+
 
 ### Dar permisos a Andrea
 PUT http://localhost:3000/api/users/692a6b04034e4a6f42c8dd8e
@@ -42,6 +45,28 @@ Content-Type: application/json
   "publisher": "Sudamericana",
   "publicationDate": "1967-05-30"
 }
+
+### Todos los libros
+GET http://localhost:3000/api/books
+
+### Por género (parcial, sin tildes)
+GET http://localhost:3000/api/books?genre=realismo
+
+### Por autor (parcial)
+GET http://localhost:3000/api/books?author=Gabriel
+
+### Por editorial
+GET http://localhost:3000/api/books?publisher=Sudamericana
+
+### Por título
+GET http://localhost:3000/api/books?title=soledad
+
+### Por disponibilidad
+GET http://localhost:3000/api/books?available=true
+
+### Combinado
+GET http://localhost:3000/api/books?author=Gabriel&genre=realismo&available=true
+
 
 ### Obtener libros
 GET http://localhost:3000/api/books
