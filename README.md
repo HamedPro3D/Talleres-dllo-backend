@@ -1,4 +1,3 @@
----
 
 # Sistema de Gestión de Biblioteca – API REST (Node.js + Express + MongoDB)
 
@@ -93,7 +92,7 @@ http://localhost:3000
     reservation.routes.js
 test.http
 server.js
-.env
+app.js
 package.json
 ```
 
@@ -270,18 +269,3 @@ Si se usa Codespaces:
    `npm start`
 5. Probar rutas desde `test.http`
 6. Usar la URL pública de Codespaces si se desea consumir desde fuera.
-
----
-
-## 11. Comentarios finales
-
-Este proyecto está diseñado para cumplir una rúbrica académica que exige:
-
-* Autenticación segura
-* Control de permisos
-* CRUD completo
-* Soft deletes
-* Filtros avanzados
-* Buenas prácticas REST
-* Pruebas mediante archivo `test.http`
-
