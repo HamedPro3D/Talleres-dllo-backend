@@ -1,0 +1,67 @@
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MmE2YjA0MDM0ZTRhNmY0MmM4ZGQ4ZSIsImVtYWlsIjoiYW5kcmVhQGV4YW1wbGUuY29tIiwiaWF0IjoxNzY0Mzg3NjM3LCJleHAiOjE3NjQ0MTY0Mzd9.Q_bRx5YVj6obavEvjCfZVAUr34n9Nl5K7sUkazlz94o
+
+### Crear usuario
+POST http://localhost:3000/api/users
+Content-Type: application/json
+
+{
+  "name": "Andrea",
+  "email": "andrea@example.com",
+  "password": "123456"
+}
+
+###
+
+### Login
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "andrea@example.com",
+  "password": "123456"
+}
+
+### Dar permisos a Andrea
+PUT http://localhost:3000/api/users/692a6b04034e4a6f42c8dd8e
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "permissions": ["CREATE_BOOKS", "UPDATE_BOOKS", "DISABLE_BOOKS"]
+}
+
+### Crear libro
+POST http://localhost:3000/api/books
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "Cien años de soledad",
+  "author": "Gabriel García Márquez",
+  "genre": "Realismo mágico",
+  "publisher": "Sudamericana",
+  "publicationDate": "1967-05-30"
+}
+
+### Obtener libros
+GET http://localhost:3000/api/books
+
+### Reservar libro
+POST http://localhost:3000/api/reservations
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "bookId": "692a70a50b1ece01a3c831e7"
+}
+
+### Obtener mis reservas
+GET http://localhost:3000/api/reservations/my
+Authorization: Bearer {{token}}
+
+
+### Eliminar mis reservas
+DELETE http://localhost:3000/api/reservations/692a734653da31058f14827a
+Authorization: Bearer {{token}}
+
+
